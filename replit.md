@@ -87,8 +87,15 @@ The backend is a Node.js Express server with TypeScript:
 
 ### Hosting and Assets
 - **Unsplash**: External image hosting for property photos
-- **Google Fonts**: Vazir font family for Persian text support
+- **Google Fonts**: Comprehensive Persian font support with Vazir, Yekan Bakh, and Estedad fonts
 - **Replit Integration**: Development environment optimizations
+
+### Persian Localization
+- **Multiple Font Support**: Primary Vazir font with Yekan Bakh and Estedad as fallbacks
+- **Font Optimization**: Enhanced text rendering with proper antialiasing and kerning
+- **RTL Layout**: Complete right-to-left layout support throughout the application
+- **Persian Numbers**: Custom utility functions for converting numbers to Persian digits
+- **Typography**: Optimized line height and letter spacing for Persian text readability
 
 ## Deployment Strategy
 

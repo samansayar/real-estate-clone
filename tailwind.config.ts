@@ -5,6 +5,10 @@ export default {
   content: ["./client/index.html", "./client/src/**/*.{js,jsx,ts,tsx}"],
   theme: {
     extend: {
+      fontFamily: {
+        'sans': ['Vazir', 'Yekan Bakh', 'Estedad', 'Tahoma', 'Arial', 'sans-serif'],
+        'persian': ['Vazir', 'Yekan Bakh', 'Estedad', 'Tahoma', 'Arial', 'sans-serif'],
+      },
       borderRadius: {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
