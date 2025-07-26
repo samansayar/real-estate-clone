@@ -1,87 +1,85 @@
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useLocation } from "wouter";
 import { motion } from "framer-motion";
 import Header from "@/components/header";
 import Footer from "@/components/footer";
 import PropertyCard from "@/components/property-card";
-import AdvancedSearchFilters from "@/components/advanced-search-filters";
+import SearchFiltersSidebar from "@/components/search-filters-sidebar";
 import SEOHead, { generateRealEstateStructuredData } from "@/components/seo-head";
 import { Card, CardContent } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { Filter, SlidersHorizontal, X } from "lucide-react";
+import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle } from "@/components/ui/sheet";
+import { Filter, SlidersHorizontal, X, Search as SearchIcon, Grid3X3, List } from "lucide-react";
 import { type Property } from "@shared/schema";
 import { apiRequest } from "@/lib/queryClient";
-
-interface SearchFilters {
-  type?: string;
-  province?: string;
-  city?: string;
-  minPrice?: number;
-  maxPrice?: number;
-  minArea?: number;
-  maxArea?: number;
-  rooms?: number[];
-  amenities?: string[];
-  propertyAge?: string;
-  transactionType?: "خرید" | "اجاره";
-}
+import { useSearchStore } from "@/stores/search-store";
 
 export default function Search() {
   const [location, setLocation] = useLocation();
   const queryClient = useQueryClient();
-  const [sortBy, setSortBy] = useState("newest");
-  const [showMobileFilters, setShowMobileFilters] = useState(false);
   
-  // Parse URL parameters
-  const urlParams = new URLSearchParams(location.split('?')[1] || '');
-  const [filters, setFilters] = useState<SearchFilters>(() => {
-    const initialFilters: SearchFilters = {};
+  const { 
+    filters, 
+    sortBy, 
+    isLoading,
+    showMobileFilters,
+    setFilters,
+    setSortBy,
+    setIsLoading,
+    setShowMobileFilters,
+    clearFilters,
+    getActiveFiltersCount,
+    updateFilter
+  } = useSearchStore();
+
+  // Parse URL parameters on component mount
+  useEffect(() => {
+    const urlParams = new URLSearchParams(location.split('?')[1] || '');
+    const urlFilters: any = {};
     
-    // Parse URL parameters
-    if (urlParams.get('type')) initialFilters.type = urlParams.get('type')!;
-    if (urlParams.get('province')) initialFilters.province = urlParams.get('province')!;
-    if (urlParams.get('city')) initialFilters.city = urlParams.get('city')!;
-    if (urlParams.get('minPrice')) initialFilters.minPrice = parseInt(urlParams.get('minPrice')!);
-    if (urlParams.get('maxPrice')) initialFilters.maxPrice = parseInt(urlParams.get('maxPrice')!);
-    if (urlParams.get('minArea')) initialFilters.minArea = parseInt(urlParams.get('minArea')!);
-    if (urlParams.get('maxArea')) initialFilters.maxArea = parseInt(urlParams.get('maxArea')!);
-    if (urlParams.get('transactionType')) initialFilters.transactionType = urlParams.get('transactionType') as "خرید" | "اجاره";
+    if (urlParams.get('type')) urlFilters.type = urlParams.get('type');
+    if (urlParams.get('province')) urlFilters.province = urlParams.get('province');
+    if (urlParams.get('city')) urlFilters.city = urlParams.get('city');
+    if (urlParams.get('minPrice')) urlFilters.minPrice = parseInt(urlParams.get('minPrice')!);
+    if (urlParams.get('maxPrice')) urlFilters.maxPrice = parseInt(urlParams.get('maxPrice')!);
+    if (urlParams.get('transactionType')) urlFilters.transactionType = urlParams.get('transactionType');
     
-    return initialFilters;
-  });
+    if (Object.keys(urlFilters).length > 0) {
+      setFilters(urlFilters);
+    }
+  }, []);
 
   const searchMutation = useMutation({
-    mutationFn: async (searchFilters: SearchFilters) => {
+    mutationFn: async (searchFilters: any) => {
+      setIsLoading(true);
       const response = await apiRequest("POST", "/api/properties/search", searchFilters);
       return await response.json();
     },
     onSuccess: (data) => {
+      setIsLoading(false);
       queryClient.setQueryData(["/api/properties/search", filters], data);
+    },
+    onError: () => {
+      setIsLoading(false);
     },
   });
 
-  const { data: properties, isLoading } = useQuery<Property[]>({
+  const { data: properties } = useQuery<Property[]>({
     queryKey: ["/api/properties/search", filters],
     queryFn: async () => {
       const response = await apiRequest("POST", "/api/properties/search", filters);
       return await response.json();
     },
+    enabled: false, // We'll trigger this manually
   });
 
-  useEffect(() => {
-    searchMutation.mutate(filters);
-  }, [filters]);
-
-  const handleFiltersChange = (newFilters: SearchFilters) => {
-    setFilters(newFilters);
-    
+  const handleSearch = () => {
     // Update URL
     const searchParams = new URLSearchParams();
-    Object.entries(newFilters).forEach(([key, value]) => {
+    Object.entries(filters).forEach(([key, value]) => {
       if (value !== undefined && value !== null) {
         if (Array.isArray(value)) {
           if (value.length > 0) searchParams.set(key, value.join(','));
@@ -92,16 +90,14 @@ export default function Search() {
     });
     
     setLocation(`/search?${searchParams.toString()}`);
-  };
-
-  const handleSearch = () => {
     searchMutation.mutate(filters);
     setShowMobileFilters(false);
   };
 
-  const clearAllFilters = () => {
-    setFilters({});
+  const handleClearFilters = () => {
+    clearFilters();
     setLocation('/search');
+    searchMutation.mutate({});
   };
 
   const sortedProperties = properties ? [...properties].sort((a, b) => {
@@ -120,20 +116,6 @@ export default function Search() {
     }
   }) : [];
 
-  const getActiveFiltersCount = () => {
-    let count = 0;
-    if (filters.type) count++;
-    if (filters.province) count++;
-    if (filters.city) count++;
-    if (filters.minPrice || filters.maxPrice) count++;
-    if (filters.minArea || filters.maxArea) count++;
-    if (filters.rooms?.length) count++;
-    if (filters.amenities?.length) count++;
-    if (filters.propertyAge) count++;
-    if (filters.transactionType) count++;
-    return count;
-  };
-
   const structuredData = generateRealEstateStructuredData();
 
   return (
@@ -148,30 +130,23 @@ export default function Search() {
       
       <Header />
       
-      {/* Search Header */}
+      {/* Clean Modern Header */}
       <motion.section 
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
-        className="bg-gradient-to-l from-blue-600 to-blue-800 text-white py-8 md:py-12"
+        className="bg-white border-b border-gray-200 py-8"
       >
         <div className="container mx-auto px-4">
-          <motion.h1 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-            className="text-2xl md:text-4xl font-bold text-center mb-4"
-          >
-            جستجوی پیشرفته املاک
-          </motion.h1>
-          <motion.p 
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.8, delay: 0.4 }}
-            className="text-center text-blue-100 text-lg"
-          >
-            با فیلترهای حرفه‌ای بهترین ملک را پیدا کنید
-          </motion.p>
+          <div className="flex items-center gap-4 mb-6">
+            <div className="p-3 bg-blue-50 rounded-xl">
+              <SearchIcon className="w-6 h-6 text-blue-600" />
+            </div>
+            <div>
+              <h1 className="text-2xl md:text-3xl font-bold text-gray-900">جستجوی املاک</h1>
+              <p className="text-gray-600 mt-1">بهترین ملک را با فیلترهای پیشرفته پیدا کنید</p>
+            </div>
+          </div>
         </div>
       </motion.section>
 
@@ -179,37 +154,34 @@ export default function Search() {
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
           {/* Desktop Filters Sidebar */}
           <div className="hidden lg:block">
-            <AdvancedSearchFilters
-              filters={filters}
-              onFiltersChange={handleFiltersChange}
-              onSearch={handleSearch}
-            />
+            <SearchFiltersSidebar onSearch={handleSearch} />
           </div>
 
           {/* Main Content */}
           <div className="lg:col-span-3">
-            {/* Mobile Filters Button & Results Header */}
-            <div className="flex flex-col space-y-4 mb-8">
+            {/* Mobile Filter & Controls */}
+            <div className="flex flex-col space-y-4 mb-6">
               {/* Mobile Filter Button */}
               <div className="lg:hidden">
                 <Sheet open={showMobileFilters} onOpenChange={setShowMobileFilters}>
                   <SheetTrigger asChild>
-                    <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white">
+                    <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white h-12 rounded-xl shadow-sm">
                       <SlidersHorizontal className="w-5 h-5 ml-2" />
                       فیلترهای جستجو
                       {getActiveFiltersCount() > 0 && (
-                        <Badge variant="secondary" className="mr-2 bg-white text-blue-600">
+                        <Badge variant="secondary" className="mr-2 bg-white text-blue-600 font-medium">
                           {getActiveFiltersCount()}
                         </Badge>
                       )}
                     </Button>
                   </SheetTrigger>
-                  <SheetContent side="right" className="w-full sm:w-96 overflow-y-auto">
-                    <AdvancedSearchFilters
-                      filters={filters}
-                      onFiltersChange={handleFiltersChange}
-                      onSearch={handleSearch}
-                    />
+                  <SheetContent side="right" className="w-full sm:w-96 overflow-y-auto p-0">
+                    <SheetHeader className="p-6 border-b border-gray-100">
+                      <SheetTitle className="text-right">فیلترهای جستجو</SheetTitle>
+                    </SheetHeader>
+                    <div className="p-4">
+                      <SearchFiltersSidebar onSearch={handleSearch} />
+                    </div>
                   </SheetContent>
                 </Sheet>
               </div>
@@ -219,118 +191,122 @@ export default function Search() {
                 <motion.div 
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className="flex flex-wrap gap-2 items-center"
+                  className="bg-white rounded-xl p-4 border border-gray-200"
                 >
-                  <span className="text-sm font-medium text-gray-600">فیلترهای فعال:</span>
-                  
-                  {filters.type && (
-                    <Badge variant="secondary" className="flex items-center gap-1">
-                      نوع: {filters.type}
-                      <X 
-                        className="w-3 h-3 cursor-pointer" 
-                        onClick={() => handleFiltersChange({ ...filters, type: undefined })}
-                      />
-                    </Badge>
-                  )}
-                  
-                  {filters.province && (
-                    <Badge variant="secondary" className="flex items-center gap-1">
-                      استان: {filters.province}
-                      <X 
-                        className="w-3 h-3 cursor-pointer" 
-                        onClick={() => handleFiltersChange({ ...filters, province: undefined, city: undefined })}
-                      />
-                    </Badge>
-                  )}
-                  
-                  {filters.city && (
-                    <Badge variant="secondary" className="flex items-center gap-1">
-                      شهر: {filters.city}
-                      <X 
-                        className="w-3 h-3 cursor-pointer" 
-                        onClick={() => handleFiltersChange({ ...filters, city: undefined })}
-                      />
-                    </Badge>
-                  )}
-                  
-                  {(filters.minPrice || filters.maxPrice) && (
-                    <Badge variant="secondary" className="flex items-center gap-1">
-                      بازه قیمت
-                      <X 
-                        className="w-3 h-3 cursor-pointer" 
-                        onClick={() => handleFiltersChange({ ...filters, minPrice: undefined, maxPrice: undefined })}
-                      />
-                    </Badge>
-                  )}
-                  
-                  {filters.rooms && filters.rooms.length > 0 && (
-                    <Badge variant="secondary" className="flex items-center gap-1">
-                      اتاق: {filters.rooms.join('، ')}
-                      <X 
-                        className="w-3 h-3 cursor-pointer" 
-                        onClick={() => handleFiltersChange({ ...filters, rooms: undefined })}
-                      />
-                    </Badge>
-                  )}
-                  
-                  {filters.amenities && filters.amenities.length > 0 && (
-                    <Badge variant="secondary" className="flex items-center gap-1">
-                      {filters.amenities.length} امکانات
-                      <X 
-                        className="w-3 h-3 cursor-pointer" 
-                        onClick={() => handleFiltersChange({ ...filters, amenities: undefined })}
-                      />
-                    </Badge>
-                  )}
-                  
-                  <Button variant="ghost" size="sm" onClick={clearAllFilters}>
-                    پاک کردن همه
-                  </Button>
+                  <div className="flex flex-wrap gap-2 items-center">
+                    <span className="text-sm font-medium text-gray-700">فیلترهای فعال:</span>
+                    
+                    {filters.type && (
+                      <Badge variant="secondary" className="flex items-center gap-1 bg-blue-50 text-blue-700 border-blue-200">
+                        نوع: {filters.type}
+                        <X 
+                          className="w-3 h-3 cursor-pointer hover:text-blue-900" 
+                          onClick={() => updateFilter("type", undefined)}
+                        />
+                      </Badge>
+                    )}
+                    
+                    {filters.province && (
+                      <Badge variant="secondary" className="flex items-center gap-1 bg-green-50 text-green-700 border-green-200">
+                        استان: {filters.province}
+                        <X 
+                          className="w-3 h-3 cursor-pointer hover:text-green-900" 
+                          onClick={() => {
+                            updateFilter("province", undefined);
+                            updateFilter("city", undefined);
+                          }}
+                        />
+                      </Badge>
+                    )}
+                    
+                    {filters.city && (
+                      <Badge variant="secondary" className="flex items-center gap-1 bg-purple-50 text-purple-700 border-purple-200">
+                        شهر: {filters.city}
+                        <X 
+                          className="w-3 h-3 cursor-pointer hover:text-purple-900" 
+                          onClick={() => updateFilter("city", undefined)}
+                        />
+                      </Badge>
+                    )}
+                    
+                    {(filters.minPrice || filters.maxPrice) && (
+                      <Badge variant="secondary" className="flex items-center gap-1 bg-yellow-50 text-yellow-700 border-yellow-200">
+                        بازه قیمت
+                        <X 
+                          className="w-3 h-3 cursor-pointer hover:text-yellow-900" 
+                          onClick={() => {
+                            updateFilter("minPrice", undefined);
+                            updateFilter("maxPrice", undefined);
+                          }}
+                        />
+                      </Badge>
+                    )}
+                    
+                    {filters.rooms && filters.rooms.length > 0 && (
+                      <Badge variant="secondary" className="flex items-center gap-1 bg-red-50 text-red-700 border-red-200">
+                        اتاق: {filters.rooms.join('، ')}
+                        <X 
+                          className="w-3 h-3 cursor-pointer hover:text-red-900" 
+                          onClick={() => updateFilter("rooms", undefined)}
+                        />
+                      </Badge>
+                    )}
+                    
+                    {filters.amenities && filters.amenities.length > 0 && (
+                      <Badge variant="secondary" className="flex items-center gap-1 bg-indigo-50 text-indigo-700 border-indigo-200">
+                        {filters.amenities.length} امکانات
+                        <X 
+                          className="w-3 h-3 cursor-pointer hover:text-indigo-900" 
+                          onClick={() => updateFilter("amenities", undefined)}
+                        />
+                      </Badge>
+                    )}
+                    
+                    <Button variant="ghost" size="sm" onClick={handleClearFilters} className="text-gray-500 hover:text-gray-700">
+                      پاک کردن همه
+                    </Button>
+                  </div>
                 </motion.div>
               )}
 
               {/* Results Header */}
-              <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-                <div>
-                  <motion.h2 
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    className="text-xl md:text-2xl font-bold text-gray-800 mb-2"
-                  >
-                    نتایج جستجو
-                  </motion.h2>
-                  {properties && (
-                    <motion.p 
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      transition={{ delay: 0.2 }}
-                      className="text-gray-600"
-                    >
-                      {properties.length} ملک یافت شد
-                    </motion.p>
-                  )}
-                </div>
-                
-                <div className="flex items-center gap-4">
-                  <label className="text-sm font-medium text-gray-700">مرتب‌سازی:</label>
-                  <Select value={sortBy} onValueChange={setSortBy}>
-                    <SelectTrigger className="w-48">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="newest">جدیدترین</SelectItem>
-                      <SelectItem value="price-low">قیمت (کم به زیاد)</SelectItem>
-                      <SelectItem value="price-high">قیمت (زیاد به کم)</SelectItem>
-                      <SelectItem value="area-small">متراژ (کم به زیاد)</SelectItem>
-                      <SelectItem value="area-large">متراژ (زیاد به کم)</SelectItem>
-                    </SelectContent>
-                  </Select>
+              <div className="bg-white rounded-xl p-4 border border-gray-200">
+                <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                  <div className="flex items-center gap-3">
+                    <div className="p-2 bg-gray-50 rounded-lg">
+                      <Grid3X3 className="w-5 h-5 text-gray-600" />
+                    </div>
+                    <div>
+                      <h2 className="text-lg font-bold text-gray-900">نتایج جستجو</h2>
+                      {properties && (
+                        <p className="text-sm text-gray-600">
+                          {properties.length} ملک یافت شد
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-center gap-3">
+                    <label className="text-sm font-medium text-gray-700">مرتب‌سازی:</label>
+                    <Select value={sortBy} onValueChange={setSortBy}>
+                      <SelectTrigger className="w-48 h-10">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="newest">جدیدترین</SelectItem>
+                        <SelectItem value="price-low">قیمت (کم به زیاد)</SelectItem>
+                        <SelectItem value="price-high">قیمت (زیاد به کم)</SelectItem>
+                        <SelectItem value="area-small">متراژ (کم به زیاد)</SelectItem>
+                        <SelectItem value="area-large">متراژ (زیاد به کم)</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
                 </div>
               </div>
             </div>
 
             {/* Results Grid */}
-            {(isLoading || searchMutation.isPending) ? (
+            {isLoading ? (
               <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
                 {[...Array(9)].map((_, i) => (
                   <motion.div
@@ -339,9 +315,9 @@ export default function Search() {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.5, delay: i * 0.1 }}
                   >
-                    <Card className="animate-pulse">
+                    <Card className="animate-pulse border border-gray-200">
                       <div className="h-48 bg-gray-200"></div>
-                      <CardContent className="p-6">
+                      <CardContent className="p-4">
                         <div className="h-4 bg-gray-200 rounded mb-2"></div>
                         <div className="h-3 bg-gray-200 rounded mb-4 w-2/3"></div>
                         <div className="h-6 bg-gray-200 rounded"></div>
@@ -350,7 +326,7 @@ export default function Search() {
                   </motion.div>
                 ))}
               </div>
-            ) : sortedProperties.length > 0 ? (
+            ) : sortedProperties && sortedProperties.length > 0 ? (
               <motion.div 
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
@@ -376,13 +352,15 @@ export default function Search() {
                 transition={{ duration: 0.5 }}
                 className="text-center py-16"
               >
-                <div className="max-w-md mx-auto">
-                  <Filter className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-                  <h3 className="text-xl font-semibold text-gray-600 mb-2">ملکی یافت نشد</h3>
-                  <p className="text-gray-500 mb-6">
+                <div className="bg-white rounded-xl p-12 border border-gray-200 max-w-md mx-auto">
+                  <div className="p-4 bg-gray-50 rounded-full w-20 h-20 mx-auto mb-6 flex items-center justify-center">
+                    <SearchIcon className="w-10 h-10 text-gray-400" />
+                  </div>
+                  <h3 className="text-xl font-semibold text-gray-900 mb-2">ملکی یافت نشد</h3>
+                  <p className="text-gray-600 mb-6">
                     با تغییر فیلترهای جستجو، املاک بیشتری را بررسی کنید
                   </p>
-                  <Button onClick={clearAllFilters} variant="outline">
+                  <Button onClick={handleClearFilters} variant="outline" className="rounded-lg">
                     پاک کردن فیلترها
                   </Button>
                 </div>

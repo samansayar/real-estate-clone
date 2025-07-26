@@ -16,7 +16,9 @@ This is a modern real estate platform called "Darchoo" built with React, TypeScr
 The frontend is built with React and TypeScript using modern development practices:
 - **Framework**: React 18+ with Vite for fast development and bundling
 - **Routing**: Wouter for lightweight client-side routing
-- **State Management**: TanStack Query (React Query) for server state management and caching
+- **State Management**: 
+  - TanStack Query (React Query) for server state management and caching
+  - Zustand for client-side state management with persist middleware
 - **UI Components**: Shadcn/ui component library built on Radix UI primitives
 - **Styling**: Tailwind CSS with custom CSS variables for theming
 - **Form Handling**: React Hook Form with Zod validation (configured but not extensively used)
