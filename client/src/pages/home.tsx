@@ -128,6 +128,147 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Special Villa Section with Video Cards */}
+      <section className="py-8 md:py-16 bg-gray-50">
+        <div className="container mx-auto px-4">
+          <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-center mb-6 md:mb-12 text-gray-800">ویلا های ویژه</h2>
+          
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+            {/* Villa Card 1 - Beachfront Villa */}
+            <div className="relative bg-white rounded-lg md:rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300">
+              <div className="relative">
+                <img 
+                  src="https://images.unsplash.com/photo-1564013799919-ab600027ffc6?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&h=300" 
+                  alt="فروش ویلا تریپلکس، ساحلی، چشم‌نواز"
+                  className="w-full h-48 md:h-56 object-cover"
+                />
+                <div className="absolute inset-0 bg-black bg-opacity-20"></div>
+                <button className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-red-500 hover:bg-red-600 text-white rounded-full p-3 transition-colors duration-200">
+                  <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M8 5v14l11-7z"/>
+                  </svg>
+                </button>
+                <div className="absolute bottom-4 right-4 bg-black bg-opacity-70 text-white px-3 py-1 rounded-lg text-sm">
+                  فروش ویلا تریپلکس، ساحلی، چشم‌نواز
+                </div>
+              </div>
+            </div>
+
+            {/* Villa Card 2 - Coastal Villa */}
+            <div className="relative bg-white rounded-lg md:rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300">
+              <div className="relative">
+                <img 
+                  src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&h=300" 
+                  alt="فروش ویلا ساحلی در بجک نوشهر"
+                  className="w-full h-48 md:h-56 object-cover"
+                />
+                <div className="absolute inset-0 bg-black bg-opacity-20"></div>
+                <button className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-red-500 hover:bg-red-600 text-white rounded-full p-3 transition-colors duration-200">
+                  <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M8 5v14l11-7z"/>
+                  </svg>
+                </button>
+                <div className="absolute bottom-4 right-4 bg-black bg-opacity-70 text-white px-3 py-1 rounded-lg text-sm">
+                  فروش ویلا ساحلی در بجک نوشهر
+                </div>
+                <div className="absolute top-4 right-4 bg-red-500 text-white px-2 py-1 rounded text-xs font-medium">
+                  جدید
+                </div>
+              </div>
+            </div>
+
+            {/* Villa Card 3 - Tourist Villa */}
+            <div className="relative bg-white rounded-lg md:rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300">
+              <div className="relative">
+                <img 
+                  src="https://images.unsplash.com/photo-1571896349842-33c89424de2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&h=300" 
+                  alt="فروش ویلا در منطقه توریستی چمستان"
+                  className="w-full h-48 md:h-56 object-cover"
+                />
+                <div className="absolute inset-0 bg-black bg-opacity-20"></div>
+                <button className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-red-500 hover:bg-red-600 text-white rounded-full p-3 transition-colors duration-200">
+                  <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M8 5v14l11-7z"/>
+                  </svg>
+                </button>
+                <div className="absolute bottom-4 right-4 bg-black bg-opacity-70 text-white px-3 py-1 rounded-lg text-sm">
+                  فروش ویلا در منطقه توریستی چمستان
+                </div>
+              </div>
+            </div>
+
+            {/* Villa Card 4 - Beach Villa */}
+            <div className="relative bg-white rounded-lg md:rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300">
+              <div className="relative">
+                <img 
+                  src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&h=300" 
+                  alt="ویلا منطقه زیبای خلیج"
+                  className="w-full h-48 md:h-56 object-cover"
+                />
+                <div className="absolute inset-0 bg-black bg-opacity-20"></div>
+                <button className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-red-500 hover:bg-red-600 text-white rounded-full p-3 transition-colors duration-200">
+                  <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M8 5v14l11-7z"/>
+                  </svg>
+                </button>
+                <div className="absolute bottom-4 right-4 bg-black bg-opacity-70 text-white px-3 py-1 rounded-lg text-sm">
+                  ویلا منطقه زیبای خلیج
+                </div>
+              </div>
+            </div>
+
+            {/* Villa Card 5 - Villa in Nokon */}
+            <div className="relative bg-white rounded-lg md:rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300">
+              <div className="relative">
+                <img 
+                  src="https://images.unsplash.com/photo-1613490493576-7fde63acd811?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&h=300" 
+                  alt="فروش ویلا ۷۵۰ متری در نکن نوشهر ایتیکان"
+                  className="w-full h-48 md:h-56 object-cover"
+                />
+                <div className="absolute inset-0 bg-black bg-opacity-20"></div>
+                <button className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-red-500 hover:bg-red-600 text-white rounded-full p-3 transition-colors duration-200">
+                  <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M8 5v14l11-7z"/>
+                  </svg>
+                </button>
+                <div className="absolute bottom-4 right-4 bg-black bg-opacity-70 text-white px-3 py-1 rounded-lg text-sm">
+                  فروش ویلا ۷۵۰ متری در نکن نوشهر ایتیکان
+                </div>
+              </div>
+            </div>
+
+            {/* Villa Card 6 - City Villa */}
+            <div className="relative bg-white rounded-lg md:rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300">
+              <div className="relative">
+                <img 
+                  src="https://images.unsplash.com/photo-1582268611958-ebfd161ef9cf?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&h=300" 
+                  alt="فروش ویلا شهری در آرتان نوشهر"
+                  className="w-full h-48 md:h-56 object-cover"
+                />
+                <div className="absolute inset-0 bg-black bg-opacity-20"></div>
+                <button className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-red-500 hover:bg-red-600 text-white rounded-full p-3 transition-colors duration-200">
+                  <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M8 5v14l11-7z"/>
+                  </svg>
+                </button>
+                <div className="absolute bottom-4 right-4 bg-black bg-opacity-70 text-white px-3 py-1 rounded-lg text-sm">
+                  فروش ویلا شهری در آرتان نوشهر
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* View More Button */}
+          <div className="text-center mt-8">
+            <Link href="/search?type=villa&featured=true">
+              <a className="inline-block bg-white border-2 border-gray-300 text-gray-700 hover:border-primary hover:text-primary px-8 py-3 rounded-lg font-medium transition-colors duration-200">
+                مشاهده بیشتر
+              </a>
+            </Link>
+          </div>
+        </div>
+      </section>
+
       {/* Manager Banner */}
       <ManagerBanner />
 
