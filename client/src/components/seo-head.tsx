@@ -112,7 +112,7 @@ export default function SEOHead({
 }
 
 // Utility function to generate structured data for real estate
-export const generateRealEstateStructuredData = (property?: any, isHomePage = false): object | undefined => {
+export const generateRealEstateStructuredData = (property?: any, isHomePage = false) => {
   if (isHomePage) {
     return {
       "@context": "https://schema.org",
@@ -169,5 +169,5 @@ export const generateRealEstateStructuredData = (property?: any, isHomePage = fa
     };
   }
 
-  return undefined;
+  return null;
 };

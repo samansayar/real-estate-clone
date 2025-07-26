@@ -64,7 +64,7 @@ export default function Home() {
         ogDescription="با بیش از 15 سال تجربه و 1000+ ملک فروخته شده، دارچو بهترین فرصت‌های خرید و فروش املاک را ارائه می‌دهد."
         ogUrl="https://darchoo.replit.app"
         ogImage="https://images.unsplash.com/photo-1560518883-ce09059eeffa?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&h=630"
-        structuredData={generateRealEstateStructuredData(undefined, true)}
+        structuredData={generateRealEstateStructuredData(null, true)}
       />
       
       <Header />
