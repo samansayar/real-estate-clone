@@ -5,6 +5,8 @@ import Footer from "@/components/footer";
 import SearchForm from "@/components/search-form";
 import PropertyCard from "@/components/property-card";
 import ManagerBanner from "@/components/manager-banner";
+import SEOHead, { generateRealEstateStructuredData } from "@/components/seo-head";
+import HeroSection from "@/components/hero-section";
 import { Card, CardContent } from "@/components/ui/card";
 import { type Property } from "@shared/schema";
 import { propertyTypes } from "@/lib/persian-utils";
@@ -53,21 +55,22 @@ export default function Home() {
 
   return (
     <div className="min-h-screen">
+      <SEOHead 
+        title="دارچو - بهترین پلتفرم خرید و فروش املاک در ایران | ویلا، آپارتمان، زمین"
+        description="خرید و فروش ویلا، آپارتمان، زمین و املاک تجاری در ایران. بیش از 1000 ملک فروخته شده، مشاوره رایگان و تضمین قانونی. پلتفرم معتبر املاک دارچو با 15 سال تجربه."
+        keywords="خرید خانه، فروش ملک، املاک ایران، ویلا دریایی، آپارتمان تهران، زمین شهرکی، املاک تجاری، مشاور املاک، سرمایه گذاری املاک، دارچو، قیمت خانه"
+        canonical="https://darchoo.replit.app"
+        ogTitle="دارچو - معتبرترین پلتفرم املاک ایران"
+        ogDescription="با بیش از 15 سال تجربه و 1000+ ملک فروخته شده، دارچو بهترین فرصت‌های خرید و فروش املاک را ارائه می‌دهد."
+        ogUrl="https://darchoo.replit.app"
+        ogImage="https://images.unsplash.com/photo-1560518883-ce09059eeffa?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&h=630"
+        structuredData={generateRealEstateStructuredData(null, true)}
+      />
+      
       <Header />
       
-      {/* Hero Section - Mobile-first */}
-      <section className="bg-gradient-to-l from-blue-600 to-blue-800 text-white py-12 md:py-20">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-8 md:mb-12">
-            <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-6xl font-bold mb-4 md:mb-6 leading-tight">خرید و فروش املاک در ایران</h1>
-            <p className="text-lg sm:text-xl md:text-2xl text-blue-100 max-w-3xl mx-auto">بهترین فرصت‌های سرمایه‌گذاری را با ما کشف کنید</p>
-          </div>
-
-          <div className="max-w-4xl mx-auto">
-            <SearchForm />
-          </div>
-        </div>
-      </section>
+      {/* New Professional Hero Section */}
+      <HeroSection />
 
       {/* Property Categories - Mobile-first */}
       <section className="py-8 md:py-16 bg-white">
