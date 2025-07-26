@@ -6,8 +6,10 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        'sans': ['Vazir', 'Yekan Bakh', 'Estedad', 'Tahoma', 'Arial', 'sans-serif'],
-        'persian': ['Vazir', 'Yekan Bakh', 'Estedad', 'Tahoma', 'Arial', 'sans-serif'],
+        'sans': ['Estedad', 'IRANSansX', 'Vazir', 'Yekan Bakh', 'Tahoma', 'Arial', 'sans-serif'],
+        'persian': ['Estedad', 'IRANSansX', 'Vazir', 'Yekan Bakh', 'Tahoma', 'Arial', 'sans-serif'],
+        'estedad': ['Estedad', 'sans-serif'],
+        'iran-sans': ['IRANSansX', 'sans-serif'],
       },
       borderRadius: {
         lg: "var(--radius)",

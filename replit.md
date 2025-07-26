@@ -48,10 +48,11 @@ The backend is a Node.js Express server with TypeScript:
 - **Real-time Filtering**: Dynamic property filtering based on user selections
 
 ### UI/UX Features
-- **Responsive Design**: Mobile-first approach with adaptive layouts
-- **Persian Localization**: Full RTL support with Persian fonts (Vazir)
+- **Mobile-first Responsive Design**: Optimized for mobile devices with progressive enhancement for desktop
+- **Persian Localization**: Full RTL support with multiple Persian fonts (Estedad, IRANSansX, Vazir)
 - **Component Library**: Comprehensive UI components using Radix UI and Tailwind CSS
 - **Interactive Elements**: Modals, dropdowns, carousels, and form components
+- **Touch-friendly Interface**: Minimum 44px touch targets and optimized form elements for mobile
 
 ## Data Flow
 
@@ -91,11 +92,12 @@ The backend is a Node.js Express server with TypeScript:
 - **Replit Integration**: Development environment optimizations
 
 ### Persian Localization
-- **Multiple Font Support**: Primary Vazir font with Yekan Bakh and Estedad as fallbacks
+- **Multiple Font Support**: Primary Estedad font with IRANSansX, Vazir, and Yekan Bakh as fallbacks
 - **Font Optimization**: Enhanced text rendering with proper antialiasing and kerning
 - **RTL Layout**: Complete right-to-left layout support throughout the application
 - **Persian Numbers**: Custom utility functions for converting numbers to Persian digits
 - **Typography**: Optimized line height and letter spacing for Persian text readability
+- **Mobile-first Typography**: Responsive font sizes and touch-friendly interface elements
 
 ## Deployment Strategy
 

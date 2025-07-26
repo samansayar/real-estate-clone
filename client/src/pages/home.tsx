@@ -55,12 +55,12 @@ export default function Home() {
     <div className="min-h-screen">
       <Header />
       
-      {/* Hero Section */}
-      <section className="bg-gradient-to-l from-blue-600 to-blue-800 text-white py-20">
+      {/* Hero Section - Mobile-first */}
+      <section className="bg-gradient-to-l from-blue-600 to-blue-800 text-white py-12 md:py-20">
         <div className="container mx-auto px-4">
-          <div className="text-center mb-12">
-            <h1 className="text-4xl md:text-6xl font-bold mb-6">خرید و فروش املاک در ایران</h1>
-            <p className="text-xl md:text-2xl text-blue-100">بهترین فرصت‌های سرمایه‌گذاری را با ما کشف کنید</p>
+          <div className="text-center mb-8 md:mb-12">
+            <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-6xl font-bold mb-4 md:mb-6 leading-tight">خرید و فروش املاک در ایران</h1>
+            <p className="text-lg sm:text-xl md:text-2xl text-blue-100 max-w-3xl mx-auto">بهترین فرصت‌های سرمایه‌گذاری را با ما کشف کنید</p>
           </div>
 
           <div className="max-w-4xl mx-auto">
@@ -69,22 +69,22 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Property Categories */}
-      <section className="py-16 bg-white">
+      {/* Property Categories - Mobile-first */}
+      <section className="py-8 md:py-16 bg-white">
         <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold text-center mb-12 text-gray-800">دسته‌بندی املاک</h2>
+          <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-center mb-6 md:mb-12 text-gray-800">دسته‌بندی املاک</h2>
           
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4 md:gap-6">
             {propertyCategories.map((category, index) => (
               <Link key={index} href={`/search?type=${category.type}`}>
-                <a className="group">
-                  <div className={`bg-gradient-to-b ${category.color} rounded-xl p-6 text-center hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1`}>
+                <a className="group block">
+                  <div className={`bg-gradient-to-b ${category.color} rounded-lg md:rounded-xl p-3 sm:p-4 md:p-6 text-center hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 min-h-[120px] sm:min-h-[140px] md:min-h-auto`}>
                     <img 
                       src={category.image} 
                       alt={category.label} 
-                      className="w-16 h-16 mx-auto mb-4 rounded-lg object-cover"
+                      className="w-10 h-10 sm:w-12 sm:h-12 md:w-16 md:h-16 mx-auto mb-2 md:mb-4 rounded-md md:rounded-lg object-cover"
                     />
-                    <h3 className={`font-semibold text-gray-800 group-hover:${category.hoverColor}`}>
+                    <h3 className={`font-semibold text-xs sm:text-sm md:text-base text-gray-800 group-hover:${category.hoverColor} leading-tight`}>
                       {category.label}
                     </h3>
                   </div>
@@ -95,22 +95,22 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Featured Villas */}
-      <section className="py-16 bg-gray-50">
+      {/* Featured Villas - Mobile-first */}
+      <section className="py-8 md:py-16 bg-gray-50">
         <div className="container mx-auto px-4">
-          <div className="flex items-center justify-between mb-12">
-            <h2 className="text-3xl font-bold text-gray-800">ویلاهای ویژه</h2>
+          <div className="flex items-center justify-between mb-6 md:mb-12">
+            <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-800">ویلاهای ویژه</h2>
             <Link href="/search?type=villa&featured=true">
-              <a className="text-primary hover:text-blue-700 font-medium">مشاهده بیشتر</a>
+              <a className="text-primary hover:text-blue-700 font-medium text-sm md:text-base">مشاهده بیشتر</a>
             </Link>
           </div>
 
           {villasLoading ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 lg:gap-8">
               {[...Array(6)].map((_, i) => (
                 <Card key={i} className="animate-pulse">
-                  <div className="h-48 bg-gray-200"></div>
-                  <CardContent className="p-6">
+                  <div className="h-40 sm:h-44 md:h-48 bg-gray-200"></div>
+                  <CardContent className="p-3 sm:p-4 md:p-6">
                     <div className="h-4 bg-gray-200 rounded mb-2"></div>
                     <div className="h-3 bg-gray-200 rounded mb-4 w-2/3"></div>
                     <div className="h-6 bg-gray-200 rounded"></div>
@@ -119,7 +119,7 @@ export default function Home() {
               ))}
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 lg:gap-8">
               {featuredVillas?.map((villa) => (
                 <PropertyCard key={villa.id} property={villa} />
               ))}
@@ -131,22 +131,22 @@ export default function Home() {
       {/* Manager Banner */}
       <ManagerBanner />
 
-      {/* Featured Lands */}
-      <section className="py-16 bg-gray-50">
+      {/* Featured Lands - Mobile-first */}
+      <section className="py-8 md:py-16 bg-white">
         <div className="container mx-auto px-4">
-          <div className="flex items-center justify-between mb-12">
-            <h2 className="text-3xl font-bold text-gray-800">زمین‌های ویژه</h2>
+          <div className="flex items-center justify-between mb-6 md:mb-12">
+            <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-800">زمین‌های ویژه</h2>
             <Link href="/search?type=land&featured=true">
-              <a className="text-primary hover:text-blue-700 font-medium">مشاهده بیشتر</a>
+              <a className="text-primary hover:text-blue-700 font-medium text-sm md:text-base">مشاهده بیشتر</a>
             </Link>
           </div>
 
           {landsLoading ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6 lg:gap-8">
               {[...Array(4)].map((_, i) => (
                 <Card key={i} className="animate-pulse">
-                  <div className="h-36 bg-gray-200"></div>
-                  <CardContent className="p-4">
+                  <div className="h-32 sm:h-36 md:h-40 bg-gray-200"></div>
+                  <CardContent className="p-3 sm:p-4">
                     <div className="h-3 bg-gray-200 rounded mb-2"></div>
                     <div className="h-2 bg-gray-200 rounded mb-3 w-2/3"></div>
                     <div className="h-4 bg-gray-200 rounded"></div>
