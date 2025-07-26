@@ -9,6 +9,9 @@ This is a modern real estate platform called "Darchoo" built with React, TypeScr
 - **Communication Style**: Simple, everyday language
 - **Animation Preference**: Framer Motion animations for enhanced user experience
 - **SEO Priority**: Professional and comprehensive SEO implementation for Google ranking
+- **Mobile Experience**: iOS-style native app experience with top/bottom navigation
+- **State Management**: Zustand for clean state management across the application
+- **Typography**: Estedad font for professional Persian text rendering
 
 ## System Architecture
 
