@@ -23,7 +23,7 @@ export default function Header() {
           {/* Logo */}
           <div className="flex items-center">
             <Link href="/">
-              <a className="text-2xl font-bold text-primary">دارچو</a>
+              <span className="text-2xl font-bold text-primary cursor-pointer">دارچو</span>
             </Link>
           </div>
 
@@ -31,13 +31,13 @@ export default function Header() {
           <div className="hidden md:flex items-center space-x-reverse space-x-8">
             {navItems.map((item) => (
               <Link key={item.href} href={item.href}>
-                <a
-                  className={`text-gray-700 hover:text-primary transition-colors ${
+                <span
+                  className={`text-gray-700 hover:text-primary transition-colors cursor-pointer ${
                     location === item.href ? "text-primary font-medium" : ""
                   }`}
                 >
                   {item.label}
-                </a>
+                </span>
               </Link>
             ))}
           </div>
@@ -63,12 +63,12 @@ export default function Header() {
               <div className="flex flex-col space-y-4 mt-8">
                 {navItems.map((item) => (
                   <Link key={item.href} href={item.href}>
-                    <a
-                      className="block text-lg py-2 px-4 rounded-lg hover:bg-gray-100 transition-colors"
+                    <span
+                      className="block text-lg py-2 px-4 rounded-lg hover:bg-gray-100 transition-colors cursor-pointer"
                       onClick={() => setIsOpen(false)}
                     >
                       {item.label}
-                    </a>
+                    </span>
                   </Link>
                 ))}
                 <div className="pt-4 border-t">

@@ -6,7 +6,9 @@ This is a modern real estate platform called "Darchoo" built with React, TypeScr
 
 ## User Preferences
 
-Preferred communication style: Simple, everyday language.
+- **Communication Style**: Simple, everyday language
+- **Animation Preference**: Framer Motion animations for enhanced user experience
+- **SEO Priority**: Professional and comprehensive SEO implementation for Google ranking
 
 ## System Architecture
 
@@ -53,6 +55,8 @@ The backend is a Node.js Express server with TypeScript:
 - **Component Library**: Comprehensive UI components using Radix UI and Tailwind CSS
 - **Interactive Elements**: Modals, dropdowns, carousels, and form components
 - **Touch-friendly Interface**: Minimum 44px touch targets and optimized form elements for mobile
+- **Framer Motion Animations**: Smooth page transitions, scroll-triggered animations, and interactive micro-animations
+- **Professional SEO**: Comprehensive SEO implementation with structured data, Open Graph tags, and performance optimization
 
 ## Data Flow
 
