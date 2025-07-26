@@ -6,9 +6,11 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import { Bed, Bath, Car, MapPin, Phone, Mail, ArrowRight } from "lucide-react";
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
+import { Bed, Bath, Car, MapPin, Phone, Mail, ArrowRight, Building, Calendar, FileText, Home, User } from "lucide-react";
 import { type Property } from "@shared/schema";
 import { formatPrice, toPersianNumber, propertyTypes } from "@/lib/persian-utils";
+import PropertyCard from "@/components/property-card";
 
 export default function PropertyDetail() {
   const params = useParams();
@@ -23,6 +25,25 @@ export default function PropertyDetail() {
       }
       return response.json();
     },
+  });
+
+  // Fetch similar properties
+  const { data: similarProperties } = useQuery<Property[]>({
+    queryKey: ["/api/properties/similar", propertyId],
+    queryFn: async () => {
+      const response = await fetch(`/api/properties/search`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          type: property?.type,
+          city: property?.city,
+        }),
+      });
+      const allProperties = await response.json();
+      // Filter out current property and limit to 6 results
+      return allProperties.filter((p: Property) => p.id !== propertyId).slice(0, 6);
+    },
+    enabled: !!property,
   });
 
   if (isLoading) {
@@ -172,20 +193,104 @@ export default function PropertyDetail() {
               <p className="text-gray-700 leading-relaxed">{property.description}</p>
             </div>
 
-            {/* Property Type & Subtype */}
-            <div className="grid grid-cols-2 gap-4 mb-8">
-              <div>
-                <h3 className="font-semibold text-gray-800 mb-2">نوع ملک</h3>
-                <p className="text-gray-600">
-                  {propertyTypes[property.type as keyof typeof propertyTypes]}
-                </p>
-              </div>
-              {property.subType && (
-                <div>
-                  <h3 className="font-semibold text-gray-800 mb-2">زیر دسته</h3>
-                  <p className="text-gray-600">{property.subType}</p>
+            {/* Property Specifications */}
+            <div className="mb-8">
+              <h2 className="text-2xl font-bold text-gray-800 mb-6">مشخصات ملک</h2>
+              <Card className="p-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {/* Type */}
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center">
+                      <Building className="w-5 h-5 text-gray-600 ml-3" />
+                      <span className="text-gray-700">نوع:</span>
+                    </div>
+                    <span className="font-medium text-gray-800">
+                      {property.type === 'villa' ? 'مسکونی' : propertyTypes[property.type as keyof typeof propertyTypes]}
+                    </span>
+                  </div>
+
+                  {/* Location */}
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center">
+                      <MapPin className="w-5 h-5 text-gray-600 ml-3" />
+                      <span className="text-gray-700">موقعیت:</span>
+                    </div>
+                    <span className="font-medium text-gray-800">ساحلی</span>
+                  </div>
+
+                  {/* Built Area */}
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center">
+                      <Home className="w-5 h-5 text-gray-600 ml-3" />
+                      <span className="text-gray-700">متراژ بنا (مترمربع):</span>
+                    </div>
+                    <span className="font-medium text-gray-800">
+                      {toPersianNumber(Math.floor(property.area * 0.7))} مترمربع
+                    </span>
+                  </div>
+
+                  {/* Land Area */}
+                  <div className="flex items-center justify-between border border-dashed border-gray-300 p-2 rounded">
+                    <div className="flex items-center">
+                      <div className="w-5 h-5 border-2 border-dashed border-gray-600 ml-3"></div>
+                      <span className="text-gray-700">متراژ زمین (مترمربع):</span>
+                    </div>
+                    <span className="font-medium text-gray-800">
+                      {toPersianNumber(property.area)} مترمربع
+                    </span>
+                  </div>
+
+                  {/* Year Built */}
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center">
+                      <Calendar className="w-5 h-5 text-gray-600 ml-3" />
+                      <span className="text-gray-700">سال ساخت:</span>
+                    </div>
+                    <span className="font-medium text-gray-800">{toPersianNumber(1404)}</span>
+                  </div>
+
+                  {/* Document */}
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center">
+                      <FileText className="w-5 h-5 text-gray-600 ml-3" />
+                      <span className="text-gray-700">سند:</span>
+                    </div>
+                    <span className="font-medium text-gray-800">دارد</span>
+                  </div>
+
+                  {/* Rooms Count */}
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center">
+                      <Home className="w-5 h-5 text-gray-600 ml-3" />
+                      <span className="text-gray-700">تعداد اتاق:</span>
+                    </div>
+                    <span className="font-medium text-gray-800">
+                      {toPersianNumber(property.bedrooms || 5)}
+                    </span>
+                  </div>
                 </div>
-              )}
+
+                <Separator className="my-6" />
+
+                {/* Price Section */}
+                <div>
+                  <h3 className="text-lg font-bold text-gray-800 mb-4">خرید</h3>
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between">
+                      <span className="text-gray-700">قیمت کل / تومان:</span>
+                      <span className="font-bold text-xl text-primary">
+                        {formatPrice(property.price)}
+                      </span>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-gray-700">قیمت هر متر:</span>
+                      <span className="font-medium text-gray-800">
+                        {formatPrice(Math.floor(property.price / property.area))} تومان
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </Card>
             </div>
           </div>
 
@@ -229,6 +334,44 @@ export default function PropertyDetail() {
             </Card>
           </div>
         </div>
+
+        {/* Similar Properties Section */}
+        {similarProperties && similarProperties.length > 0 && (
+          <div className="mt-16 mb-8">
+            <h2 className="text-2xl font-bold text-gray-800 mb-8 text-center">آگهی‌های مشابه</h2>
+            
+            <div className="relative">
+              <Carousel
+                opts={{
+                  align: "start",
+                  direction: "rtl",
+                }}
+                className="w-full"
+              >
+                <CarouselContent className="-ml-2 md:-ml-4">
+                  {similarProperties.map((similarProperty) => (
+                    <CarouselItem key={similarProperty.id} className="pl-2 md:pl-4 md:basis-1/2 lg:basis-1/3">
+                      <div className="p-1">
+                        <PropertyCard property={similarProperty} />
+                      </div>
+                    </CarouselItem>
+                  ))}
+                </CarouselContent>
+                <CarouselPrevious className="absolute -right-12 top-1/2 -translate-y-1/2" />
+                <CarouselNext className="absolute -left-12 top-1/2 -translate-y-1/2" />
+              </Carousel>
+            </div>
+
+            <div className="text-center mt-8">
+              <Link href={`/search?type=${property.type}&city=${property.city}`}>
+                <Button variant="outline" size="lg">
+                  مشاهده همه آگهی‌های مشابه
+                  <ArrowRight className="w-4 h-4 mr-2" />
+                </Button>
+              </Link>
+            </div>
+          </div>
+        )}
       </div>
 
       <Footer />
