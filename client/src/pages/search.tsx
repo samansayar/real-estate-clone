@@ -4,6 +4,7 @@ import { useLocation } from "wouter";
 import { motion } from "framer-motion";
 import Header from "@/components/header";
 import Footer from "@/components/footer";
+import MobileLayout from "@/components/mobile-layout";
 import PropertyCard from "@/components/property-card";
 import SearchFiltersSidebar from "@/components/search-filters-sidebar";
 import SEOHead, { generateRealEstateStructuredData } from "@/components/seo-head";
@@ -119,7 +120,7 @@ export default function Search() {
   const structuredData = generateRealEstateStructuredData();
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <>
       <SEOHead 
         title="جستجوی پیشرفته املاک - دارچو | فیلتر براساس قیمت، موقعیت و امکانات"
         description="جستجوی پیشرفته املاک در ایران با فیلترهای حرفه‌ای. انتخاب براساس قیمت، موقعیت، متراژ، تعداد اتاق و امکانات. یافتن بهترین ملک برای خرید و اجاره."
@@ -127,8 +128,80 @@ export default function Search() {
         canonical="https://darchoo.replit.app/search"
         structuredData={structuredData || undefined}
       />
-      
-      <Header />
+
+      {/* Desktop Layout */}
+      <div className="hidden md:block min-h-screen bg-gray-50">
+        <Header />
+        <SearchContent 
+          onSearch={handleSearch}
+          onClearFilters={handleClearFilters}
+          properties={sortedProperties}
+          isLoading={isLoading}
+        />
+        <Footer />
+      </div>
+
+      {/* Mobile Layout */}
+      <div className="md:hidden">
+        <MobileLayout 
+          title="جستجوی املاک" 
+          showBack={true} 
+          showFilter={true}
+          onFilterClick={() => setShowMobileFilters(true)}
+        >
+          <SearchContent 
+            onSearch={handleSearch}
+            onClearFilters={handleClearFilters}
+            properties={sortedProperties}
+            isLoading={isLoading}
+          />
+        </MobileLayout>
+      </div>
+    </>
+  );
+}
+
+interface SearchContentProps {
+  onSearch: () => void;
+  onClearFilters: () => void;
+  properties: any[];
+  isLoading: boolean;
+}
+
+function SearchContent({ onSearch, onClearFilters, properties, isLoading }: SearchContentProps) {
+  const { 
+    filters, 
+    sortBy, 
+    showMobileFilters,
+    setShowMobileFilters,
+    setSortBy,
+    getActiveFiltersCount,
+    updateFilter
+  } = useSearchStore();
+
+  return (
+    <div className="bg-gray-50 min-h-screen">
+      {/* Clean Modern Header - Desktop Only */}
+      <div className="hidden md:block">
+        <motion.section 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          className="bg-white border-b border-gray-200 py-8"
+        >
+          <div className="container mx-auto px-4">
+            <div className="flex items-center gap-4 mb-6">
+              <div className="p-3 bg-blue-50 rounded-xl">
+                <SearchIcon className="w-6 h-6 text-blue-600" />
+              </div>
+              <div>
+                <h1 className="text-2xl md:text-3xl font-bold text-gray-900">جستجوی املاک</h1>
+                <p className="text-gray-600 mt-1">بهترین ملک را با فیلترهای پیشرفته پیدا کنید</p>
+              </div>
+            </div>
+          </div>
+        </motion.section>
+      </div>
       
       {/* Clean Modern Header */}
       <motion.section 

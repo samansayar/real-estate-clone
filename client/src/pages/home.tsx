@@ -2,6 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Link } from "wouter";
 import Header from "@/components/header";
 import Footer from "@/components/footer";
+import MobileLayout from "@/components/mobile-layout";
 import SearchForm from "@/components/search-form";
 import PropertyCard from "@/components/property-card";
 import ManagerBanner from "@/components/manager-banner";
@@ -56,7 +57,7 @@ export default function Home() {
   const structuredData = generateRealEstateStructuredData(undefined, true);
 
   return (
-    <div className="min-h-screen">
+    <>
       <SEOHead 
         title="دارچو - بهترین پلتفرم خرید و فروش املاک در ایران | ویلا، آپارتمان، زمین"
         description="خرید و فروش ویلا، آپارتمان، زمین و املاک تجاری در ایران. بیش از 1000 ملک فروخته شده، مشاوره رایگان و تضمین قانونی. پلتفرم معتبر املاک دارچو با 15 سال تجربه."
@@ -68,15 +69,74 @@ export default function Home() {
         ogImage="https://images.unsplash.com/photo-1560518883-ce09059eeffa?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&h=630"
         structuredData={structuredData || undefined}
       />
-      
-      <Header />
-      
+
+      {/* Desktop Layout */}
+      <div className="hidden md:block min-h-screen">
+        <Header />
+        <HomeContent />
+        <Footer />
+      </div>
+
+      {/* Mobile Layout */}
+      <div className="md:hidden">
+        <MobileLayout title="دارچو" showSearch={true}>
+          <HomeContent />
+        </MobileLayout>
+      </div>
+    </>
+  );
+}
+
+function HomeContent() {
+  const { data: featuredVillas, isLoading: villasLoading } = useQuery<Property[]>({
+    queryKey: ["/api/properties/featured", "villa"],
+    queryFn: async () => {
+      const response = await fetch("/api/properties/featured?type=villa");
+      return response.json();
+    }
+  });
+
+  const { data: featuredLands, isLoading: landsLoading } = useQuery<Property[]>({
+    queryKey: ["/api/properties/featured", "land"],
+    queryFn: async () => {
+      const response = await fetch("/api/properties/featured?type=land");
+      return response.json();
+    }
+  });
+
+  const { data: featuredApartments, isLoading: apartmentsLoading } = useQuery<Property[]>({
+    queryKey: ["/api/properties/featured", "apartment"],
+    queryFn: async () => {
+      const response = await fetch("/api/properties/featured?type=apartment");
+      return response.json();
+    }
+  });
+
+  const { data: featuredCommercial, isLoading: commercialLoading } = useQuery<Property[]>({
+    queryKey: ["/api/properties/featured", "commercial"],
+    queryFn: async () => {
+      const response = await fetch("/api/properties/featured?type=commercial");
+      return response.json();
+    }
+  });
+
+  const propertyCategories = [
+    { type: "villa", label: "خرید ویلا", color: "from-green-50 to-green-100", hoverColor: "text-green-600", image: "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=200" },
+    { type: "apartment", label: "خرید آپارتمان", color: "from-blue-50 to-blue-100", hoverColor: "text-blue-600", image: "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=200" },
+    { type: "land", label: "خرید زمین", color: "from-yellow-50 to-yellow-100", hoverColor: "text-yellow-600", image: "https://images.unsplash.com/photo-1500382017468-9049fed747ef?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=200" },
+    { type: "commercial", label: "خرید اداری", color: "from-purple-50 to-purple-100", hoverColor: "text-purple-600", image: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=200" },
+    { type: "commercial", label: "خرید تجاری", color: "from-red-50 to-red-100", hoverColor: "text-red-600", image: "https://images.unsplash.com/photo-1555636222-cae831e670b3?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=200" },
+    { type: "industrial", label: "خرید صنعتی", color: "from-gray-50 to-gray-100", hoverColor: "text-gray-600", image: "https://images.unsplash.com/photo-1587293852726-70cdb56c2866?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=200" },
+  ];
+
+  return (
+    <div>
       {/* Hero Section with Framer Motion */}
       <motion.section 
         initial={{ opacity: 0, y: 50 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8, ease: "easeOut" }}
-        className="bg-gradient-to-l from-blue-600 to-blue-800 text-white py-12 md:py-20"
+        className="bg-gradient-to-l from-blue-600 to-blue-800 text-white py-8 md:py-20"
       >
         <div className="container mx-auto px-4">
           <motion.div 

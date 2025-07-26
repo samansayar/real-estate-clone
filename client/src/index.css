@@ -3,6 +3,54 @@
 @tailwind components;
 @tailwind utilities;
 
+/* iOS-like mobile styling */
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-feature-settings: 'liga' 1, 'kern' 1;
+}
+
+/* iOS safe area support */
+@supports (padding: max(0px)) {
+  .pt-safe {
+    padding-top: max(16px, env(safe-area-inset-top));
+  }
+  .pb-safe {
+    padding-bottom: max(16px, env(safe-area-inset-bottom));
+  }
+}
+
+/* Remove default button focus styles on mobile */
+@media (max-width: 768px) {
+  button:focus {
+    outline: none;
+  }
+  
+  /* iOS-like button press feedback */
+  button:active {
+    transform: scale(0.95);
+    transition: transform 0.1s;
+  }
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Hide scrollbar on mobile */
+@media (max-width: 768px) {
+  ::-webkit-scrollbar {
+    display: none;
+  }
+  
+  * {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+}
+
 :root {
   --background: hsl(0, 0%, 100%);
   --foreground: hsl(20, 14.3%, 4.1%);
