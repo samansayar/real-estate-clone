@@ -13,47 +13,6 @@ import { type Property } from "@shared/schema";
 import { propertyTypes } from "@/lib/persian-utils";
 
 export default function Home() {
-  const { data: featuredVillas, isLoading: villasLoading } = useQuery<Property[]>({
-    queryKey: ["/api/properties/featured", "villa"],
-    queryFn: async () => {
-      const response = await fetch("/api/properties/featured?type=villa");
-      return response.json();
-    }
-  });
-
-  const { data: featuredLands, isLoading: landsLoading } = useQuery<Property[]>({
-    queryKey: ["/api/properties/featured", "land"],
-    queryFn: async () => {
-      const response = await fetch("/api/properties/featured?type=land");
-      return response.json();
-    }
-  });
-
-  const { data: featuredApartments, isLoading: apartmentsLoading } = useQuery<Property[]>({
-    queryKey: ["/api/properties/featured", "apartment"],
-    queryFn: async () => {
-      const response = await fetch("/api/properties/featured?type=apartment");
-      return response.json();
-    }
-  });
-
-  const { data: featuredCommercial, isLoading: commercialLoading } = useQuery<Property[]>({
-    queryKey: ["/api/properties/featured", "commercial"],
-    queryFn: async () => {
-      const response = await fetch("/api/properties/featured?type=commercial");
-      return response.json();
-    }
-  });
-
-  const propertyCategories = [
-    { type: "villa", label: "خرید ویلا", color: "from-green-50 to-green-100", hoverColor: "text-green-600", image: "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=200" },
-    { type: "apartment", label: "خرید آپارتمان", color: "from-blue-50 to-blue-100", hoverColor: "text-blue-600", image: "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=200" },
-    { type: "land", label: "خرید زمین", color: "from-yellow-50 to-yellow-100", hoverColor: "text-yellow-600", image: "https://images.unsplash.com/photo-1500382017468-9049fed747ef?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=200" },
-    { type: "commercial", label: "خرید اداری", color: "from-purple-50 to-purple-100", hoverColor: "text-purple-600", image: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=200" },
-    { type: "commercial", label: "خرید تجاری", color: "from-red-50 to-red-100", hoverColor: "text-red-600", image: "https://images.unsplash.com/photo-1555636222-cae831e670b3?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=200" },
-    { type: "industrial", label: "خرید صنعتی", color: "from-gray-50 to-gray-100", hoverColor: "text-gray-600", image: "https://images.unsplash.com/photo-1587293852726-70cdb56c2866?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=200" },
-  ];
-
   const structuredData = generateRealEstateStructuredData(undefined, true);
 
   return (
@@ -174,13 +133,13 @@ function HomeContent() {
         </div>
       </motion.section>
 
-      {/* Property Categories with Framer Motion */}
+      {/* Mobile App Style Property Categories */}
       <motion.section 
         initial={{ opacity: 0 }}
         whileInView={{ opacity: 1 }}
         transition={{ duration: 0.8 }}
         viewport={{ once: true, margin: "-100px" }}
-        className="py-8 md:py-16 bg-white"
+        className="py-8 md:py-16 bg-gray-50"
       >
         <div className="container mx-auto px-4">
           <motion.h2 
@@ -188,13 +147,50 @@ function HomeContent() {
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
             viewport={{ once: true }}
-            className="text-xl sm:text-2xl md:text-3xl font-bold text-center mb-6 md:mb-12 text-gray-800"
+            className="text-xl sm:text-2xl md:text-3xl font-bold text-center mb-6 md:mb-8 text-gray-800"
           >
-            دسته‌بندی املاک
+            ویلا های ویژه
           </motion.h2>
           
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4 md:gap-6">
-            {propertyCategories.map((category, index) => (
+          <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 max-w-4xl mx-auto">
+            {[
+              { 
+                title: "فروش ویلا نزدیک ساحل در منطقه توریستی", 
+                subtitle: "بهترین منطقه، بهترین قیمت",
+                image: "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&h=400",
+                type: "villa"
+              },
+              { 
+                title: "فروش ویلا ساحلی در چابک نوشهر", 
+                subtitle: "Darchoo",
+                image: "https://images.unsplash.com/photo-1580587771525-78b9dba3b914?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&h=400",
+                type: "villa"
+              },
+              { 
+                title: "فروش ویلا در منطقه توریستی چیتگر", 
+                subtitle: "",
+                image: "https://images.unsplash.com/photo-1613977257363-707ba9348227?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&h=400",
+                type: "villa"
+              },
+              { 
+                title: "ویلا منطقه زیبای چابک", 
+                subtitle: "Darchoo",
+                image: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&h=400",
+                type: "villa"
+              },
+              { 
+                title: "فروش ویلا ۷۵۰ متری در کرکین نوشهر ایرانخان", 
+                subtitle: "",
+                image: "https://images.unsplash.com/photo-1558618047-3c8c76ca7d13?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&h=400",
+                type: "villa"
+              },
+              { 
+                title: "فروش ویلا شهرکی در آستارا نوشهر", 
+                subtitle: "Darchoo",
+                image: "https://images.unsplash.com/photo-1568605114967-8130f3a36994?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&h=400",
+                type: "villa"
+              }
+            ].map((category, index) => (
               <motion.div
                 key={index}
                 initial={{ opacity: 0, y: 50 }}
@@ -202,31 +198,74 @@ function HomeContent() {
                 transition={{ duration: 0.5, delay: index * 0.1 }}
                 viewport={{ once: true }}
                 whileHover={{ 
-                  scale: 1.05, 
-                  y: -5,
+                  scale: 1.02,
                   transition: { duration: 0.2 }
                 }}
-                whileTap={{ scale: 0.95 }}
+                whileTap={{ scale: 0.98 }}
+                className="group"
               >
                 <Link href={`/search?type=${category.type}`}>
-                  <span className="group block cursor-pointer">
-                    <div className={`bg-gradient-to-b ${category.color} rounded-lg md:rounded-xl p-3 sm:p-4 md:p-6 text-center hover:shadow-lg transition-all duration-300 min-h-[120px] sm:min-h-[140px] md:min-h-auto`}>
-                      <motion.img 
-                        src={category.image} 
-                        alt={category.label} 
-                        className="w-10 h-10 sm:w-12 sm:h-12 md:w-16 md:h-16 mx-auto mb-2 md:mb-4 rounded-md md:rounded-lg object-cover"
-                        whileHover={{ rotate: 5 }}
-                        transition={{ duration: 0.2 }}
-                      />
-                      <h3 className={`font-semibold text-xs sm:text-sm md:text-base text-gray-800 group-hover:${category.hoverColor} leading-tight`}>
-                        {category.label}
-                      </h3>
+                  <div className="relative rounded-2xl overflow-hidden cursor-pointer shadow-lg hover:shadow-xl transition-all duration-300 aspect-[4/3]">
+                    {/* Background Image */}
+                    <div 
+                      className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+                      style={{ backgroundImage: `url(${category.image})` }}
+                    />
+                    
+                    {/* Overlay for better text readability */}
+                    <div className="absolute inset-0 bg-black/20" />
+                    
+                    {/* Content */}
+                    <div className="relative h-full flex flex-col justify-between p-4">
+                      {/* Play Button / Arrow Icon */}
+                      <div className="flex justify-center mb-2">
+                        <div className="w-10 h-10 bg-red-500 rounded-full flex items-center justify-center shadow-lg">
+                          <svg 
+                            className="w-5 h-5 text-white transform translate-x-0.5" 
+                            fill="currentColor" 
+                            viewBox="0 0 24 24"
+                          >
+                            <path d="M8 5v14l11-7z"/>
+                          </svg>
+                        </div>
+                      </div>
+                      
+                      {/* Text Content */}
+                      <div className="text-center">
+                        <h3 className="text-white font-semibold text-sm sm:text-base leading-tight mb-1 drop-shadow-lg">
+                          {category.title}
+                        </h3>
+                        {category.subtitle && (
+                          <p className="text-white/90 text-xs font-medium drop-shadow-lg">
+                            {category.subtitle}
+                          </p>
+                        )}
+                      </div>
                     </div>
-                  </span>
+                  </div>
                 </Link>
               </motion.div>
             ))}
           </div>
+          
+          {/* View More Button */}
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.4 }}
+            viewport={{ once: true }}
+            className="text-center mt-8"
+          >
+            <Link href="/search?type=villa">
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="px-8 py-3 bg-white border border-gray-300 rounded-full text-gray-700 font-medium hover:bg-gray-50 hover:border-gray-400 transition-all duration-200 shadow-sm"
+              >
+                مشاهده بیشتر
+              </motion.button>
+            </Link>
+          </motion.div>
         </div>
       </motion.section>
 
